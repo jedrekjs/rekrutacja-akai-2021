@@ -16,19 +16,20 @@ function renderPokemons(pokemons) {
 
     pokeList.append(pokeDiv);
     pokeDiv.append(pokeImg);
-    pokeImg.src=pokemon.image;
+    pokeImg.src = pokemon.image;
 
     pokemon.types.forEach(type => {
       pokeDiv.classList.add(type);
     });
     pokeDiv.classList.add("poke-card");
   });
+  if (document.body.lastChild == pokeList) document.body.removeChild(pokeList);
   document.body.appendChild(pokeList);
   pokeList.classList.add("poke-container");
 }
 
 // następnie wykonaj uzupełnioną metodę z tablicą pokemons, aby sprawdzić czy wszystko działa
-renderPokemons(pokemons);
+// renderPokemons(pokemons);
 
 /*
   2. Przeglądanie całej listy pokemonów może okazać się trochę uciążliwe. Fajnie byłoby skorzystać z filtrów, które już znajdują sie w pliku html. 
@@ -38,19 +39,54 @@ renderPokemons(pokemons);
 */
 
 function filterPokemons(pokemons) {
-  let filteredPokemons = [] 
-  pokemons.forEach(pokemon => {
-    if(pokemon.types.includes(selectedType));
-  });
+  console.log(form.elements)
+  let formFilters = Array.from(form.elements);
+  let checkboxes = formFilters.filter(filter => filter.type == 'checkbox' && filter.checked).map(filter => filter.id)
+  let textFilterValue = form.elements["pokemon-name"].value
+  console.log(checkboxes)
+  console.log(textFilterValue)
+  let filteredPokemons = pokemons.filter(pokemon => {
+    if (checkTypes(pokemon, checkboxes)) {
+      if (textFilterValue != "") {
+        console.log("checktypes, text")
+        if (pokemon.name.includes(textFilterValue)) return pokemon
+        else return false
+      }
+      else {
+        console.log("checktypes, empty text")
+        return pokemon
+      }
+    }
+    else {
+      if (textFilterValue != "") {
+        console.log("no checktypes, text")
+        if (pokemon.name.includes(textFilterValue)) return pokemon
+        else return false
+      }
+      else {
+        console.log("no checktypes, empty text")
+        return false
+      }
+    }
+    // if (textFilterValue != "" && pokemon.name.includes(textFilterValue)) return true
+  })
+
+  console.log(filteredPokemons)
+  return filteredPokemons
+}
+
+function checkTypes(pokemon, checkboxes) {
+  return pokemon.types.some(type => { return checkboxes.includes(type) })
 }
 
 const form = document.querySelector("form");
-
+console.log(form);
+console.log(form.elements[0]);
 function submitForm(event) {
-
   event.preventDefault();
   // następnie wykonaj uzupełnioną metodę z tablicą pokemons, aby sprawdzić czy wszystko działa
-  // renderPokemons(filterPokemons(pokemons));
+  renderPokemons(filterPokemons(pokemons));
+  // filterPokemons(pokemons)
 }
 
 form.addEventListener("submit", submitForm);

@@ -36,7 +36,8 @@ button {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    max-width: 80%;
+    width: 100%;
+    max-width: 960px;
 }
 
 .poke-card {
